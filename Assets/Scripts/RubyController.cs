@@ -8,12 +8,11 @@ public class RubyController : MonoBehaviour
     
     public int maxHealth = 5;
     public float timeInvincible = 2.0f;
-
-    public int health { get { return currentHealth; }}
-    int currentHealth;
-    
     bool isInvincible;
     float invincibleTimer;
+    
+    public int health { get { return currentHealth; }}
+    int currentHealth;
     
     Rigidbody2D rigidbody2d;
     float horizontal;
@@ -27,9 +26,10 @@ public class RubyController : MonoBehaviour
 
     void Start ()
     {
-         animator = GetComponent<Animator>();
-         rigidbody2d = GetComponent<Rigidbody2D>();
-         currentHealth = maxHealth;
+        rigidbody2d = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        
+        currentHealth = maxHealth;
     
     }
 
@@ -56,8 +56,26 @@ public class RubyController : MonoBehaviour
             if (invincibleTimer < 0)
                 isInvincible = false;
         }
-    }
 
+        if(Input.GetKeyDown(KeyCode.X))
+        {
+            RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("NPC"));
+
+            if(hit.collider != null)
+            {
+                MrFrog npcScript = hit.collider.GetComponent<MrFrog>();
+                NonPlayerCharacter character = hit.collider.GetComponent<NonPlayerCharacter>();
+                if (character != null)
+             {
+                 character.DisplayDialog();
+             }  
+
+            }
+
+       
+}
+    }
+    
     void FixedUpdate()
     {
         Vector2 position = rigidbody2d.position;
@@ -81,8 +99,15 @@ public class RubyController : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         Debug.Log(currentHealth + "/" + maxHealth);
     }
+
+    public void PlayAudio(AudioClip clip)
+    {
+
+    }
+
 }
 
+    
 
 
 
